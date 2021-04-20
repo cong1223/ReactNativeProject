@@ -10,9 +10,11 @@ const IndexSwiper = memo(props => {
   return (
     <View height={swiperHeight}>
       <Swiper
+        key={swiperData.length}
         height={swiperHeight}
         autoplay={true}
         loop={true}
+        activeDotColor={'#fff'}
         paginationStyle={styles.pagination}
       >
         {swiperData.map((item, index) => {
