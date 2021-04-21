@@ -3,6 +3,8 @@ import { ScrollView } from 'react-native';
 import IndexSwiper from '../components/IndexSwiper';
 import MainTitle from '../components/MainTitle';
 import RecomCourseList from '../components/RecomCourseList';
+import CourseList from '../components/CourseList';
+import { filterFieldData } from '../utils/ext';
 import courseService from '../services/CourseService';
 
 const HomePage = props => {
@@ -37,9 +39,25 @@ const HomePage = props => {
         navigation={navigation}
       />
       {renderMainTitle(fieldData[0])}
+      <CourseList
+        courseData={filterFieldData(courseData, '0', true)}
+        navigation={navigation}
+      />
       {renderMainTitle(fieldData[1])}
+      <CourseList
+        courseData={filterFieldData(courseData, '1', true)}
+        navigation={navigation}
+      />
       {renderMainTitle(fieldData[2])}
+      <CourseList
+        courseData={filterFieldData(courseData, '2', true)}
+        navigation={navigation}
+      />
       {renderMainTitle(fieldData[3])}
+      <CourseList
+        courseData={filterFieldData(courseData, '3', true)}
+        navigation={navigation}
+      />
     </ScrollView>
   );
 };

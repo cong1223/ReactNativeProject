@@ -3,7 +3,6 @@ import { View, Text, TouchableWithoutFeedback, Image } from 'react-native';
 
 const CourseItem = props => {
   const { data, styles, navigation } = props;
-  console.log('===', navigation);
   return (
     <TouchableWithoutFeedback
       onPress={() => navigation.navigate('Detail', { courseId: data.id })}
