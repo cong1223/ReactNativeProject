@@ -8,12 +8,12 @@ class CourseService extends BaseService {
     return this.get(this.API.getCourseDatas);
   }
 
-  getCourses() {
-    return this.get(this.API.getCourses);
+  getCourses(fieldId = 'all') {
+    return this.get(this.API.getCourses + fieldId);
   }
 
-  getCourseFields(filed = 'all') {
-    return this.get(this.API.getCourseFields, { filed });
+  getCourseFields() {
+    return this.get(this.API.getCourseFields);
   }
 }
 

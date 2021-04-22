@@ -12,7 +12,7 @@ export default class BaseService {
     if (params) {
       let paramsArray = [];
       //拼接参数
-      Object.keys(params).forEach((key) =>
+      Object.keys(params).forEach(key =>
         paramsArray.push(key + '=' + params[key])
       );
       if (url.search(/\?/) === -1) {
@@ -29,9 +29,9 @@ export default class BaseService {
           // appId: '1234345656'
         }
       })
-        .then((response) => response.json())
+        .then(response => response.json())
         //把response转为json
-        .then((responseJson) => {
+        .then(responseJson => {
           // 拿到上面的转好的json
           // 打印返回结果
           if (responseJson.ret_code == 0) {
@@ -42,7 +42,7 @@ export default class BaseService {
             //可以处理返回的错误信息
           }
         })
-        .catch((e) => {
+        .catch(e => {
           reject(e);
           // Alert.alert('提示信息', '请检查您的网络是否已经连接');
         });
@@ -62,9 +62,9 @@ export default class BaseService {
       },
       body: params //JSON.stringify(params)
     })
-      .then((response) => response.json())
+      .then(response => response.json())
       //把response转为json
-      .then((responseJson) => {
+      .then(responseJson => {
         // 拿到上面的转好的json
         console.log(responseJson);
         // 打印返回结果
@@ -76,7 +76,7 @@ export default class BaseService {
           //可以处理返回的错误信息
         }
       })
-      .catch((e) => {
+      .catch(e => {
         console.log(e);
         error && error(error);
         // Alert.alert("e", e);
@@ -97,9 +97,9 @@ export default class BaseService {
       },
       body: JSON.stringify(params)
     })
-      .then((response) => response.json())
+      .then(response => response.json())
       //把response转为json
-      .then((responseJson) => {
+      .then(responseJson => {
         // 拿到上面的转好的json
         console.log(responseJson);
         // 打印返回结果
@@ -111,7 +111,7 @@ export default class BaseService {
           //可以处理返回的错误信息
         }
       })
-      .catch((e) => {
+      .catch(e => {
         console.log(e);
         error && error(error);
         // Alert.alert('错误提示', '请检查您的网络是否已经连接');
@@ -145,9 +145,9 @@ export default class BaseService {
       },
       body: formData
     })
-      .then((response) => response.json())
+      .then(response => response.json())
       //把response转为json
-      .then((responseJson) => {
+      .then(responseJson => {
         // 拿到上面的转好的json
         console.log(responseJson);
         // 打印返回结果
@@ -159,7 +159,7 @@ export default class BaseService {
           //可以处理返回的错误信息
         }
       })
-      .catch((e) => {
+      .catch(e => {
         console.log(e);
         error && error(error);
       });
