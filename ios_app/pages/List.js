@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
+import ListTab from '../components/ListTab';
 import courseService from '../services/CourseService';
+import commonStyles from '../styles/commonStyles';
 
 const ListPage = () => {
   const [fieldData, setFieldData] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [curIndex, setCurIndex] = useState(0);
+  const [curField, setCurField] = useState('all');
   const getCourseFields = () => {
     courseService
       .getCourseFields()
@@ -27,13 +31,21 @@ const ListPage = () => {
         console.log(e);
       });
   };
+  const onTabClick = (field, index) => {
+    setCurIndex(index);
+    setCurField(field);
+  };
   useEffect(() => {
     getCourseFields();
     getCourses();
   }, []);
   return (
-    <View>
-      <Text>List Page</Text>
+    <View style={commonStyles.container}>
+      <ListTab
+        fieldData={fieldData}
+        curIndex={curIndex}
+        onTabClick={onTabClick}
+      />
     </View>
   );
 };
