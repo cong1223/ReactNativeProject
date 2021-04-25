@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Text, View, ScrollView } from 'react-native';
 import ListTab from '../components/ListTab';
 import courseService from '../services/CourseService';
 import commonStyles from '../styles/commonStyles';
+import CourseList from '../components/CourseList';
+import useCallbackState from '../hooks/useCallbackState';
 
-const ListPage = () => {
+const ListPage = props => {
+  const { navigation } = props;
   const [fieldData, setFieldData] = useState([]);
   const [courses, setCourses] = useState([]);
   const [curIndex, setCurIndex] = useState(0);
-  const [curField, setCurField] = useState('all');
+  const [curField, setCurField] = useCallbackState('all');
+  const [courseData, setCourseData] = useState({});
   const getCourseFields = () => {
     courseService
       .getCourseFields()
@@ -25,7 +29,14 @@ const ListPage = () => {
     courseService
       .getCourses(field)
       .then(res => {
-        console.log('===getCourses===', res);
+        setCourseData(
+          Object.assign(
+            {
+              [field]: res
+            },
+            courseData
+          )
+        );
       })
       .catch(e => {
         console.log(e);
@@ -33,11 +44,15 @@ const ListPage = () => {
   };
   const onTabClick = (field, index) => {
     setCurIndex(index);
-    setCurField(field);
+    setCurField(field, data => {
+      if (!courseData[data]) {
+        getCourses(data);
+      }
+    });
   };
   useEffect(() => {
     getCourseFields();
-    getCourses();
+    getCourses(curField);
   }, []);
   return (
     <View style={commonStyles.container}>
@@ -46,6 +61,14 @@ const ListPage = () => {
         curIndex={curIndex}
         onTabClick={onTabClick}
       />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {courseData[curField] && (
+          <CourseList
+            courseData={courseData[curField]}
+            navigation={navigation}
+          />
+        )}
+      </ScrollView>
     </View>
   );
 };
