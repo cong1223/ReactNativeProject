@@ -5,6 +5,7 @@ import courseService from '../services/CourseService';
 import commonStyles from '../styles/commonStyles';
 import CourseList from '../components/CourseList';
 import useCallbackState from '../hooks/useCallbackState';
+import MyRefreshControl from '../components/MyRefreshControl';
 
 const ListPage = props => {
   const { navigation } = props;
@@ -13,6 +14,7 @@ const ListPage = props => {
   const [curIndex, setCurIndex] = useState(0);
   const [curField, setCurField] = useCallbackState('all');
   const [courseData, setCourseData] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
   const getCourseFields = () => {
     courseService
       .getCourseFields()
@@ -26,6 +28,7 @@ const ListPage = props => {
       });
   };
   const getCourses = field => {
+    setRefreshing(true);
     courseService
       .getCourses(field)
       .then(res => {
@@ -40,15 +43,25 @@ const ListPage = props => {
       })
       .catch(e => {
         console.log(e);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setRefreshing(false);
+        }, 1000);
       });
   };
   const onTabClick = (field, index) => {
+    setRefreshing(false);
     setCurIndex(index);
     setCurField(field, data => {
       if (!courseData[data]) {
         getCourses(data);
       }
     });
+  };
+  const onPageRefresh = () => {
+    if (refreshing) return;
+    getCourses(curField);
   };
   useEffect(() => {
     getCourseFields();
@@ -61,7 +74,15 @@ const ListPage = props => {
         curIndex={curIndex}
         onTabClick={onTabClick}
       />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <MyRefreshControl
+            refreshing={refreshing}
+            onPageRefresh={onPageRefresh}
+          />
+        }
+      >
         {courseData[curField] && (
           <CourseList
             courseData={courseData[curField]}

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, RefreshControl } from 'react-native';
+import { ScrollView } from 'react-native';
 import IndexSwiper from '../components/IndexSwiper';
 import MainTitle from '../components/MainTitle';
 import RecomCourseList from '../components/RecomCourseList';
 import CourseList from '../components/CourseList';
 import { filterFieldData } from '../utils/ext';
 import courseService from '../services/CourseService';
+import MyRefreshControl from '../components/MyRefreshControl';
 
 const HomePage = props => {
   const [swiperData, setSwiperData] = useState([]);
@@ -14,6 +15,7 @@ const HomePage = props => {
   const [recomCourseData, setRecomCourseData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const load = () => {
+    setRefreshing(true);
     courseService
       .getCourseDatas()
       .then(res => {
@@ -23,11 +25,12 @@ const HomePage = props => {
         setRecomCourseData(res.recomCourses);
       })
       .finally(() => {
-        setRefreshing(false);
+        setTimeout(() => {
+          setRefreshing(false);
+        }, 1000);
       });
   };
   const onPageRefresh = () => {
-    setRefreshing(true);
     load();
   };
   const renderMainTitle = (data, title) => {
@@ -35,18 +38,6 @@ const HomePage = props => {
       return data && <MainTitle title={data && data.field_name} />;
     }
     return <MainTitle title={title} />;
-  };
-  const renderRefreshControl = options => {
-    const { title, refreshing, onPageRefresh, tintColor, titleColor } = options;
-    return (
-      <RefreshControl
-        title={title}
-        refreshing={refreshing}
-        onRefresh={onPageRefresh}
-        tintColor={tintColor}
-        titleColor={titleColor}
-      />
-    );
   };
   const { navigation } = props;
   useEffect(() => {
@@ -56,13 +47,12 @@ const HomePage = props => {
     <ScrollView
       automaticallyAdjustContentInsets={false}
       showsVerticalScrollIndicator={false}
-      refreshControl={renderRefreshControl({
-        titleColor: '#666',
-        tintColor: '#666',
-        title: '正在加载中',
-        refreshing: refreshing,
-        onPageRefresh: onPageRefresh
-      })}
+      refreshControl={
+        <MyRefreshControl
+          refreshing={refreshing}
+          onPageRefresh={onPageRefresh}
+        />
+      }
     >
       <IndexSwiper navigation={navigation} swiperData={swiperData} />
       {renderMainTitle(null, '推荐课程')}
