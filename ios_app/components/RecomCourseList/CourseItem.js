@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableWithoutFeedback, Image } from 'react-native';
+import { View, Text, TouchableWithoutFeedback } from 'react-native';
+import AniImage from '../AniImage';
 
 const CourseItem = props => {
   const { data, styles, navigation } = props;
@@ -9,13 +10,13 @@ const CourseItem = props => {
     >
       <View style={styles.courseItem}>
         <View style={styles.imgView}>
-          <Image style={styles.imgView} source={{ url: data.course_img }} />
+          <AniImage styles={styles.imgView} url={data.course_img} />
         </View>
         <View style={styles.courseName}>
           <Text style={styles.courseNameText}>{data.course_name}</Text>
         </View>
         <View style={styles.teacherInfo}>
-          <Image style={styles.teacherImg} source={{ url: data.teacher_img }} />
+          <AniImage styles={styles.teacherImg} url={data.teacher_img} />
           <Text style={styles.teacherName}>{data.teacher_name}</Text>
         </View>
         <View style={styles.price}>

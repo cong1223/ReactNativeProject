@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableWithoutFeedback, Image } from 'react-native';
+import AniImage from '../AniImage';
 
 const SwiperItem = props => {
   const { data, styles, navigation } = props;
@@ -9,7 +10,7 @@ const SwiperItem = props => {
       style={styles.swiperSize}
       onPress={() => navigation.navigate('Detail')}
     >
-      <Image style={styles.swiperSize} source={{ url: data.img }} />
+      <AniImage styles={styles.swiperSize} url={data.img} />
     </TouchableWithoutFeedback>
   );
 };
