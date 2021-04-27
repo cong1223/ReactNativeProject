@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Text, View, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, ScrollView } from 'react-native';
 import ListTab from '../components/ListTab';
 import courseService from '../services/CourseService';
 import commonStyles from '../styles/commonStyles';
 import CourseList from '../components/CourseList';
 import useCallbackState from '../hooks/useCallbackState';
 import MyRefreshControl from '../components/MyRefreshControl';
+import PageLoading from '../components/PageLoading';
 
 const ListPage = props => {
   const { navigation } = props;
@@ -14,7 +15,8 @@ const ListPage = props => {
   const [curIndex, setCurIndex] = useState(0);
   const [curField, setCurField] = useCallbackState('all');
   const [courseData, setCourseData] = useState({});
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useCallbackState(false);
+  const [pageLoadingShow, setPageLoadingShow] = useState(false);
   const getCourseFields = () => {
     courseService
       .getCourseFields()
@@ -27,8 +29,10 @@ const ListPage = props => {
         console.log(e);
       });
   };
-  const getCourses = field => {
-    setRefreshing(true);
+  const getCourses = (field, isRefresh = false) => {
+    if (!isRefresh) {
+      setPageLoadingShow(true);
+    }
     courseService
       .getCourses(field)
       .then(res => {
@@ -47,6 +51,7 @@ const ListPage = props => {
       .finally(() => {
         setTimeout(() => {
           setRefreshing(false);
+          setPageLoadingShow(false);
         }, 1000);
       });
   };
@@ -60,8 +65,12 @@ const ListPage = props => {
     });
   };
   const onPageRefresh = () => {
-    if (refreshing) return;
-    getCourses(curField);
+    if (refreshing) {
+      return;
+    }
+    setRefreshing(true, () => {
+      getCourses(curField, true);
+    });
   };
   useEffect(() => {
     getCourseFields();
@@ -83,9 +92,11 @@ const ListPage = props => {
           />
         }
       >
-        {courseData[curField] && (
+        {pageLoadingShow ? (
+          <PageLoading />
+        ) : (
           <CourseList
-            courseData={courseData[curField]}
+            courseData={courseData[curField] || []}
             navigation={navigation}
           />
         )}
