@@ -1,11 +1,13 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import WebView from 'react-native-webview';
 
-const DetailPage = () => {
+const DetailPage = props => {
+  const { courseId } = props.route.params;
   return (
-    <View>
-      <Text>Detail Page</Text>
-    </View>
+    <WebView
+      source={{ url: 'https://ke.qq.com/course/' + courseId }}
+      startInLoadingState={true}
+    />
   );
 };
 
